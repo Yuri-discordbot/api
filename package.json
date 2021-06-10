@@ -1,0 +1,22 @@
+{
+  "name": "yuri-configurator-server",
+  "version": "0.1.0",
+  "description": "The backend to the yuri configurator",
+  "repository": "github:Yuri-discordbot/configurator-server",
+  "author": {
+    "name": "Catherine Gilbert",
+    "email": "catherine.gilbert15@gmail.com",
+    "url": "olaren.dev"
+  },
+  "license": "MIT",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "data-access": "git://github.com/Yuri-discordbot/data-access"
+  },
+  "private": true
+}
