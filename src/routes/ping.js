@@ -1,9 +1,11 @@
-const router = require("express").Router();
+import {Router} from "express";
 
-router.get("/ping", async (req, res) => {
+const pingRoutes = Router();
+
+pingRoutes.get("/ping", async (req, res) => {
     res.send({
         message: "pong",
     });
 });
 
-module.exports = router;
+export {pingRoutes};

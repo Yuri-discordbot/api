@@ -1,11 +1,10 @@
-const express = require("express");
-const morgan = require("morgan");
-const cors = require("cors");
-const app = express();
-const mongoose = require("mongoose");
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
+import mongoose from "mongoose";
 
-const authentication = require("./middlewares/authenticationMiddleware");
-const routes = require("./routes");
+import {authenticationMiddleware} from "./middlewares/authenticationMiddleware";
+import {routes} from "./routes";
 
 mongoose.connect(process.env.MONGO_URL, {
     useUnifiedTopology: true,
@@ -14,16 +13,17 @@ mongoose.connect(process.env.MONGO_URL, {
     console.log("Connected to MongoDB database");
 });
 
+const app = express();
+
 // noinspection JSCheckFunctionSignatures
 app.use(morgan("dev"));
-
 // noinspection JSCheckFunctionSignatures
 app.use(cors());
-app.use(authentication);
+
+app.use(authenticationMiddleware);
 app.use(routes);
 
-let port = process.env.PORT || 3001;
-
+const port = process.env.PORT || 3001;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

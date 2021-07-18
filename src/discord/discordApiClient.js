@@ -1,8 +1,8 @@
-const axios = require("axios");
+import axios from "axios";
 
 /*** TODO: ADD RATE LIMITING ***/
 
-module.exports = class DiscordAPIClient{
+class DiscordAPIClient {
     constructor(token) {
         this.client = axios.create({
             baseURL: "https://discord.com/api/v9",
@@ -22,3 +22,5 @@ module.exports = class DiscordAPIClient{
         }
     }
 }
+
+export {DiscordAPIClient};

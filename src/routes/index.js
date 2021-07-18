@@ -1,6 +1,8 @@
-const router = require("express").Router();
-const ping = require("./ping");
+import {Router} from "express";
+import {pingRoutes} from "./ping";
 
-router.use(ping);
+const routes = Router();
 
-module.exports = router;
+routes.use(pingRoutes);
+
+export {routes};

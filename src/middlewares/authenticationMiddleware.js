@@ -1,4 +1,4 @@
-const DiscordApiClient = require("../discord/discordApiClient");
+import {DiscordAPIClient} from "../discord/discordApiClient";
 
 let knownTokens = {};
 
@@ -6,7 +6,7 @@ setInterval(() => {
     knownTokens = {};
 }, 604800000); // clear cache every week
 
-module.exports = authenticationMiddleware = async (req, res, next) => {
+const authenticationMiddleware = async (req, res, next) => {
     const authorizationHeader = req.header("Authorization");
 
     if (authorizationHeader === undefined || authorizationHeader === null) {
@@ -30,7 +30,7 @@ module.exports = authenticationMiddleware = async (req, res, next) => {
     if (knownTokens[token] === undefined) {
         // token is unknown
 
-        let discordAPIClient = new DiscordApiClient(authorizationHeader);
+        let discordAPIClient = new DiscordAPIClient(authorizationHeader);
         let userInfo = await discordAPIClient.getUserInfo();
 
         if (userInfo === null) {
@@ -47,3 +47,5 @@ module.exports = authenticationMiddleware = async (req, res, next) => {
 
     next();
 };
+
+export {authenticationMiddleware};
