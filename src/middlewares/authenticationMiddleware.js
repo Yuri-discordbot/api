@@ -21,22 +21,18 @@ const authenticationMiddleware = async (req, res, next) => {
 
     if (knownTokens[authorizationHeader] === undefined) {
         // token is unknown
-        try {
+        let discordAPIClient = new DiscordAPIClient(authorizationHeader);
+        let userInfo = await discordAPIClient.getUserInfo();
 
-            let discordAPIClient = new DiscordAPIClient(authorizationHeader);
-            let userInfo = await discordAPIClient.getUserInfo();
-
-            if (userInfo === null) {
-                res.status("401").send("Unauthorized");
-                return;
-            }
-
-            knownTokens[authorizationHeader] = {};
-            knownTokens[authorizationHeader].userInfo = userInfo;
-            knownTokens[authorizationHeader].discordClient = discordAPIClient;
-        } catch (e) {
-            console.log(e);
+        if (userInfo === null) {
+            res.status("401").send("Unauthorized");
+            return;
         }
+
+        knownTokens[authorizationHeader] = {};
+        knownTokens[authorizationHeader].userInfo = userInfo;
+        knownTokens[authorizationHeader].discordClient = discordAPIClient;
+
     }
 
     req.userInfo = knownTokens[authorizationHeader].userInfo;

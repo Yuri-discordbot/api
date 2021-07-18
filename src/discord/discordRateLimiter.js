@@ -5,7 +5,7 @@ class DiscordRateLimiter {
     }
 
     async handleRequest(config) {
-        return new Promise(resolve => setTimeout(() => resolve(config), 2000));
+        return new Promise(resolve => setTimeout(() => resolve(config), 20));
     }
 
     handleResponse(config) {

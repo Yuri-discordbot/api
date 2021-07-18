@@ -1,5 +1,4 @@
 import axios from "axios";
-import {DiscordRateLimiter} from "./discordRateLimiter.js";
 
 /*** TODO: ADD RATE LIMITING ***/
 
@@ -11,8 +10,6 @@ class DiscordAPIClient {
                 Authorization: token
             },
         });
-
-        this.rateLimiter = new DiscordRateLimiter(this.client);
     }
 
     async getUserInfo() {
