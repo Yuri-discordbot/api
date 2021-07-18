@@ -1,4 +1,4 @@
-import {DiscordAPIClient} from "../discord/discordApiClient";
+import {DiscordAPIClient} from "../discord/discordApiClient.js";
 
 let knownTokens = {};
 
@@ -14,36 +14,33 @@ const authenticationMiddleware = async (req, res, next) => {
         return;
     }
 
-    let token;
-    if (authorizationHeader.startsWith("Bot ")) {
-        console.log("bot");
-        token = authorizationHeader.substr("Bot ".length);
-    } else if (authorizationHeader.startsWith("Bearer ")) {
-        console.log("Bearer");
-        token = authorizationHeader.substr("Bearer ".length);
-    } else {
-        console.log("wtf");
+    if (!(authorizationHeader.startsWith("Bot ") || authorizationHeader.startsWith("Bearer "))) {
         res.status("401").send("Unauthorized");
         return;
     }
 
-    if (knownTokens[token] === undefined) {
+    if (knownTokens[authorizationHeader] === undefined) {
         // token is unknown
+        try {
 
-        let discordAPIClient = new DiscordAPIClient(authorizationHeader);
-        let userInfo = await discordAPIClient.getUserInfo();
+            let discordAPIClient = new DiscordAPIClient(authorizationHeader);
+            let userInfo = await discordAPIClient.getUserInfo();
 
-        if (userInfo === null) {
-            res.status("401").send("Unauthorized");
-            return;
+            if (userInfo === null) {
+                res.status("401").send("Unauthorized");
+                return;
+            }
+
+            knownTokens[authorizationHeader] = {};
+            knownTokens[authorizationHeader].userInfo = userInfo;
+            knownTokens[authorizationHeader].discordClient = discordAPIClient;
+        } catch (e) {
+            console.log(e);
         }
-
-        knownTokens[token].userInfo = userInfo;
-        knownTokens[token].discordClient = discordAPIClient;
     }
 
-    req.userInfo = knownTokens[token].userInfo;
-    req.discordClient = knownTokens[token].discordClient;
+    req.userInfo = knownTokens[authorizationHeader].userInfo;
+    req.discordClient = knownTokens[authorizationHeader].discordClient;
 
     next();
 };

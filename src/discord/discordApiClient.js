@@ -1,4 +1,5 @@
 import axios from "axios";
+import {DiscordRateLimiter} from "./discordRateLimiter.js";
 
 /*** TODO: ADD RATE LIMITING ***/
 
@@ -8,8 +9,10 @@ class DiscordAPIClient {
             baseURL: "https://discord.com/api/v9",
             headers: {
                 Authorization: token
-            }
+            },
         });
+
+        this.rateLimiter = new DiscordRateLimiter(this.client);
     }
 
     async getUserInfo() {
