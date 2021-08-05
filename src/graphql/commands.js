@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import {Command} from "../schemas/commands.js";
 
 const typeDef = gql`
     type Command {
@@ -10,36 +11,17 @@ const typeDef = gql`
 
     extend type Query {
         commands: [Command]!,
-        command(id: ID!): Command,
+        command(name: String!): Command,
     }
 `;
 
 const resolvers = {
     Query: {
         commands: () => {
-            return [
-                {
-                    id: "id1",
-                    name: "pat",
-                    embed_text: "$sender is patting $receiver",
-                    images_urls: [
-                        "https://url1.com",
-                        "https://url2.com",
-                    ],
-                },
-                {
-                    id: "id2",
-                    name: "uwu",
-                    embed_text: "uwu",
-                }
-            ];
+            return Command.find();
         },
-        command: (_, {id}) => {
-            return {
-                id,
-                name: "name",
-                embed_text: "awa",
-            }
+        command: (_, {name}) => {
+            return Command.findOne({'name': name});
         }
     }
 }
