@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import {Command} from "../schemas/commands.js";
+import {Command} from "../schemas/command.js";
 
 const typeDef = gql`
     type Command {
@@ -21,7 +21,7 @@ const resolvers = {
             return Command.find();
         },
         command: (_, {name}) => {
-            return Command.findOne({'name': name});
+            return Command.findOne({"name": name});
         }
     }
 }
