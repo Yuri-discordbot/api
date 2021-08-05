@@ -1,0 +1,10 @@
+type Command {
+    id: ID!
+    name: String!
+    embed_text: String
+    images_urls: [String]!
+}
+
+type Query {
+    commands: [Command]!
+}
