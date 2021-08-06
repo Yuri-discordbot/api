@@ -1,5 +1,5 @@
 import _ from "lodash"
-import {makeExecutableSchema} from "graphql-tools";
+import {makeExecutableSchema} from "@graphql-tools/schema";
 import gql from "graphql-tag";
 
 import {resolvers as commandsResolver, typeDef as commandsTypeDef} from "./commands.js";

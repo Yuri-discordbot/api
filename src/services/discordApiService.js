@@ -2,7 +2,7 @@ import axios from "axios";
 
 /*** TODO: ADD RATE LIMITING ***/
 
-class DiscordAPIClient {
+class DiscordApiService {
     constructor(token) {
         this.client = axios.create({
             baseURL: "https://discord.com/api/v9",
@@ -21,6 +21,15 @@ class DiscordAPIClient {
             return null;
         }
     }
+
+    async getUserGuilds() {
+        try {
+            const response = await this.client.get("/users/@me/guilds");
+            return response.data;
+        } catch (err) {
+            return null;
+        }
+    }
 }
 
-export {DiscordAPIClient};
+export {DiscordApiService};

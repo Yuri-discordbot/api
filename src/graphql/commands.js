@@ -17,11 +17,11 @@ const typeDef = gql`
 
 const resolvers = {
     Query: {
-        commands: () => {
+        commands: (_root, _args, _context) => {
             return Command.find();
         },
-        command: (_, {name}) => {
-            return Command.findOne({"name": name});
+        command: (_root, args, _context) => {
+            return Command.findOne({"name": args.name});
         }
     }
 }
