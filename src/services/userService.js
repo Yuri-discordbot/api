@@ -15,14 +15,14 @@ class UserService {
     }
 
     async createUserFromDiscordData(userInfo, guilds) {
-        let admins_guilds = await guilds.filter((guild) => {
-            // bitwise fuckery to check permissions
-            return ((guild.permissions & MANAGE_GUILD_PERMISSION) === MANAGE_GUILD_PERMISSION);
-        }).map(async (guild) => {
-            return await guildService.findGuildByDiscordId(guild.id);
-        }).filter((guild) => {
-            return guild === undefined;
-        });
+        let admins_guilds = await Promise.all(
+            guilds.filter((guild) => {
+                // bitwise fuckery to check permissions
+                return ((guild.permissions & MANAGE_GUILD_PERMISSION) === MANAGE_GUILD_PERMISSION);
+            }).map(async (guild) => {
+                return await guildService.findByDiscordId(guild.id);
+            })
+        );
 
         let user = new User({
             discord_id: userInfo.id,

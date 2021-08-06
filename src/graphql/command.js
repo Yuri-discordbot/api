@@ -6,7 +6,9 @@ const typeDef = gql`
         id: ID!,
         name: String!,
         embed_text: String,
-        images_urls: [String]
+        images_urls: [String],
+        nsfw: Boolean!,
+        guilds: [Guild],
     }
 
     extend type Query {

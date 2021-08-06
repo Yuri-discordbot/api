@@ -4,6 +4,7 @@ const schema = new mongoose.Schema({
     discord_id: {
         type: String,
         required: true,
+        unique: true,
     }
 });
 
