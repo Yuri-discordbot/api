@@ -3,24 +3,22 @@ import {GuildService} from "./guildService.js";
 
 const MANAGE_GUILD_PERMISSION = 0x0000000020;
 
-const guildService = new GuildService();
-
-class UserService {
-    async getById(id) {
+const UserService = {
+    getById: async (id) => {
         return User.findById(id);
-    }
+    },
 
-    async getByDiscordId(discordId) {
+    getByDiscordId: async (discordId) => {
         return User.findOne({"discord_id": discordId});
-    }
+    },
 
-    async createUserFromDiscordData(userInfo, guilds) {
+    createUserFromDiscordData: async (userInfo, guilds) => {
         let admins_guilds = await Promise.all(
             guilds.filter((guild) => {
                 // bitwise fuckery to check permissions
                 return ((guild.permissions & MANAGE_GUILD_PERMISSION) === MANAGE_GUILD_PERMISSION);
             }).map(async (guild) => {
-                return await guildService.findByDiscordId(guild.id);
+                return await GuildService.findByDiscordId(guild.id);
             })
         );
 

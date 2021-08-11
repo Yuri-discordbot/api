@@ -2,7 +2,7 @@ import axios from "axios";
 
 /*** TODO: ADD RATE LIMITING ***/
 
-class DiscordApiService {
+class DiscordAPIClient {
     constructor(token) {
         this.client = axios.create({
             baseURL: "https://discord.com/api/v9",
@@ -32,4 +32,4 @@ class DiscordApiService {
     }
 }
 
-export {DiscordApiService};
+export {DiscordAPIClient};

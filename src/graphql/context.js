@@ -1,7 +1,5 @@
 import {AuthenticationService} from "../services/authenticationService.js";
 
-const authService = new AuthenticationService();
-
 const buildContext = async (req) => {
     let authToken = null;
     let currentUser = null;
@@ -10,7 +8,7 @@ const buildContext = async (req) => {
         authToken = req.header("Authorization");
 
         if (authToken) {
-            currentUser = await authService.tradeTokenForUser(authToken);
+            currentUser = await AuthenticationService.tradeTokenForUser(authToken);
         }
     } catch (e) {
         console.warn(`Unable to authenticate using auth token: ${authToken}`);

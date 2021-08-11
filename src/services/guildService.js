@@ -1,15 +1,15 @@
 import {Guild} from "../schemas/guild.js";
 
-class GuildService {
-    async findAll() {
-        return Guild.find();
-    }
+const GuildService = {
+    findAll: async () => {
+        return Guild.find()
+    },
 
-    async findByDiscordId(discordId) {
+    findByDiscordId: async (discordId) => {
         return Guild.findOne({"discord_id": discordId})
-    }
+    },
 
-    async createGuild(discordId) {
+    createGuild: async (discordId) => {
         let guild = new Guild({"discord_id": discordId});
 
         try {

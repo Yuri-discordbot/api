@@ -1,8 +1,6 @@
 import gql from "graphql-tag";
 import {GuildService} from "../services/guildService.js";
 
-const guildService = new GuildService();
-
 const typeDef = gql`
     type Guild {
         id: ID!
@@ -22,15 +20,15 @@ const typeDef = gql`
 const resolvers = {
     Query: {
         guilds: (_root, _args, _context) => {
-            return guildService.findAll();
+            return GuildService.findAll();
         },
         guild: (_root, args, _context) => {
-            return guildService.findByDiscordId(args.discord_id);
+            return GuildService.findByDiscordId(args.discord_id);
         }
     },
     Mutation: {
         registerGuild: (_root, args, _context) => {
-            return guildService.createGuild(args.discord_id);
+            return GuildService.createGuild(args.discord_id);
         }
     }
 }
