@@ -5,6 +5,7 @@ const typeDef = gql`
     type Command {
         id: ID!,
         name: String!,
+        description: String!,
         embed_text: String,
         images_urls: [String],
         nsfw: Boolean!,
@@ -18,7 +19,7 @@ const typeDef = gql`
     }
 
     extend type Mutation {
-        createCommandInGuild(guild_id: ID!, name: String!, embed_text: String, images_urls: [String], nsfw: Boolean!): Command,
+        createCommandInGuild(guild_id: ID!, name: String!, description: String!, embed_text: String, images_urls: [String], nsfw: Boolean!): Command,
     }
 `;
 
@@ -34,7 +35,7 @@ const resolvers = {
 
     Mutation: {
         createCommandInGuild: async (_root, args, context) => {
-            return await CommandService.createCommandInGuild(context.currentUser, args.guild_id, args.name, args.embed_text, args.images_urls, args.nsfw)
+            return await CommandService.createCommandInGuild(context.currentUser, args.guild_id, args.name, args.description, args.embed_text, args.images_urls, args.nsfw)
         },
     },
 }
