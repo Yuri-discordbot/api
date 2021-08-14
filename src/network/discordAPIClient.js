@@ -1,5 +1,5 @@
-import axios from "axios";
-import {environment} from "../env.js";
+import axios from "axios"
+import {environment} from "../env.js"
 
 /*** TODO: ADD RATE LIMITING ***/
 
@@ -11,17 +11,17 @@ class DiscordAPIClient {
             baseURL: "https://discord.com/api/v9",
             headers: {
                 Authorization: token,
-                'Content-Type': "application/json",
+                "Content-Type": "application/json",
                 Accept: "application/json"
             },
-        });
+        })
     }
 
     async getUserInfo() {
         try {
-            const response = await this.client.get("/users/@me");
-            return response.data;
-        } catch (err) {
+            const response = await this.client.get("/users/@me")
+            return response.data
+        } catch (e) {
             console.log(e)
             throw new Error("Failed to get user info from token. Do you have the 'identify' scope in your token?")
         }
@@ -29,9 +29,9 @@ class DiscordAPIClient {
 
     async getUserGuilds() {
         try {
-            const response = await this.client.get("/users/@me/guilds");
-            return response.data;
-        } catch (err) {
+            const response = await this.client.get("/users/@me/guilds")
+            return response.data
+        } catch (e) {
             console.log(e)
             throw new Error("Failed to get the guilds for the user. Do you have the 'guilds' scope in your token?")
         }
@@ -87,4 +87,4 @@ class DiscordAPIClient {
     }
 }
 
-export {DiscordAPIClient};
+export {DiscordAPIClient}

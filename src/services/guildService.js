@@ -1,4 +1,4 @@
-import {Guild} from "../schemas/guild.js";
+import {Guild} from "../schemas/guild.js"
 
 const GuildService = {
     findAll: async () => {
@@ -6,7 +6,7 @@ const GuildService = {
     },
 
     findById: (id) => {
-        return Guild.findById(id);
+        return Guild.findById(id)
     },
 
     findByDiscordId: async (discordId) => {
@@ -14,12 +14,13 @@ const GuildService = {
     },
 
     createGuild: async (discordId) => {
-        let guild = new Guild({"discord_id": discordId});
+        const guild = new Guild({"discord_id": discordId})
 
         try {
-            return await guild.save();
+            return await guild.save()
         } catch (e) {
-            return null;
+            console.log(e)
+            throw new Error("This guild is already registered")
         }
     }
 }

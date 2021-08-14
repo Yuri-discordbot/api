@@ -5,7 +5,7 @@ const environment = {
 }
 
 for (const [key, value] of Object.entries(environment)) {
-    if(!value) {
+    if (!value) {
         throw new Error(`${key} environment variable is not set.`)
     }
 }

@@ -1,39 +1,43 @@
-import {DiscordAPIClient} from "../network/discordAPIClient.js";
-import {UserService} from "./userService.js";
+import {DiscordAPIClient} from "../network/discordAPIClient.js"
+import {UserService} from "./userService.js"
 
-let knownTokens = {};
+let knownTokens = {}
 
+const SECONDS_IN_ONE_DAY = 86400
 setInterval(() => {
-    knownTokens = {};
-}, 604800000); // clear cache every week
+    knownTokens = {}
+}, SECONDS_IN_ONE_DAY) // clear cache every day
 
 const checkTokenWithDiscordAndConvertToUser = async (token) => {
-    const discordApiService = new DiscordAPIClient(token);
-    const userInfo = await discordApiService.getUserInfo();
+    const discordApiService = new DiscordAPIClient(token)
+    const userInfo = await discordApiService.getUserInfo()
 
-    if (!userInfo) return null;
-
-    let user = await UserService.getByDiscordId(userInfo.id);
-
-    if (!user) {
-        const userGuilds = await discordApiService.getUserGuilds();
-        user = await UserService.createUserFromDiscordData(userInfo, userGuilds);
+    if (!userInfo) {
+        console.log("Could not retrieve user info from discord")
+        return null
     }
 
-    knownTokens[token] = user._id;
-    return user;
+    let user = await UserService.getByDiscordId(userInfo.id)
+
+    if (!user) {
+        const userGuilds = await discordApiService.getUserGuilds()
+        user = await UserService.createUserFromDiscordData(userInfo, userGuilds)
+    }
+
+    knownTokens[token] = user._id
+    return user
 }
 
 const AuthenticationService = {
     tradeTokenForUser: async (token) => {
-        if (!token) return null;
+        if (!token) return null
 
-        let userId = knownTokens[token];
+        const userId = knownTokens[token]
 
         return userId
-            ? await UserService.getById(userId)
-            : await checkTokenWithDiscordAndConvertToUser(token);
+            ? UserService.getById(userId)
+            : checkTokenWithDiscordAndConvertToUser(token)
     }
 }
 
-export {AuthenticationService};
+export {AuthenticationService}

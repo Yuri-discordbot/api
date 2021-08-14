@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
-const commandSchema = new mongoose.Schema({
+const commandSchema = new mongoose.Schema(
+    {
         name: {
             type: String,
             required: true,
@@ -33,6 +34,6 @@ const commandSchema = new mongoose.Schema({
             updatedAt: "updated_at"
         }
     }
-);
+)
 
-export {commandSchema};
+export {commandSchema}

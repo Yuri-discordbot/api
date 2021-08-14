@@ -1,11 +1,11 @@
-import {Router} from "express";
+import {Router} from "express"
 
-const pingRoutes = Router();
+const pingRoutes = Router()
 
 pingRoutes.get("/ping", async (req, res) => {
     res.send({
         message: "pong",
-    });
-});
+    })
+})
 
-export {pingRoutes};
+export {pingRoutes}

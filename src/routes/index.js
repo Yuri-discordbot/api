@@ -1,10 +1,10 @@
-import {Router} from "express";
-import {pingRoutes} from "./ping.js";
-import {graphQlRoutes} from "./graphql.js";
+import {Router} from "express"
+import {pingRoutes} from "./ping.js"
+import {graphQlRoutes} from "./graphql.js"
 
-const routes = Router();
+const routes = Router()
 
-routes.use(pingRoutes);
-routes.use(graphQlRoutes);
+routes.use(pingRoutes)
+routes.use(graphQlRoutes)
 
-export {routes};
+export {routes}

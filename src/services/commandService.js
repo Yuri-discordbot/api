@@ -1,7 +1,7 @@
-import {AuthorizationService} from "./authorizationService.js";
-import {Guild} from "../schemas/guild.js";
-import {DiscordAPIClient} from "../network/discordAPIClient.js";
-import {environment} from "../env.js";
+import {AuthorizationService} from "./authorizationService.js"
+import {Guild} from "../schemas/guild.js"
+import {DiscordAPIClient} from "../network/discordAPIClient.js"
+import {environment} from "../env.js"
 
 const botToken = environment.botToken
 
@@ -11,14 +11,14 @@ const findCommandWithNameInGuild = (guild, commandName) => {
 
 const CommandService = {
     findAllInGuild: async (guildId) => {
-        let guild = await Guild.findById(guildId);
+        const guild = await Guild.findById(guildId)
         if (!guild) return null
 
-        return guild.commands;
+        return guild.commands
     },
 
     findInGuildByName: async (guildId, name) => {
-        let guild = await Guild.findById(guildId)
+        const guild = await Guild.findById(guildId)
         if (!guild) return null
 
         return findCommandWithNameInGuild(guild, name)
@@ -38,7 +38,7 @@ const CommandService = {
             throw new Error(`The command ${name}' already exists in this guild`)
         }
 
-        let client = new DiscordAPIClient(`Bot ${botToken}`)
+        const client = new DiscordAPIClient(`Bot ${botToken}`)
         const createdCommand = await client.createGuildCommand(guild.discord_id, name, description)
 
         guild.commands.push({
@@ -60,21 +60,22 @@ const CommandService = {
             throw new Error("You do not have the permissions to edit this guild")
         }
 
-        let guild = await Guild.findById(guildId)
+        const guild = await Guild.findById(guildId)
         if (!guild) {
             throw new Error("The requested guild does not exists")
         }
 
-        // use == between string and mongoose objectId
-        // noinspection EqualityComparisonWithCoercionJS
-        let commandIndex = guild.commands.findIndex(command => command._id == commandId)
+        const commandIndex = guild.commands.findIndex(command => String(command._id) === commandId)
+
+        // eslint-disable-next-line no-magic-numbers
         if (commandIndex === -1) {
             throw new Error("The requested command does not exists")
         }
 
-        let client = new DiscordAPIClient(`Bot ${botToken}`)
-        await client.deleteGuildCommand(guild.discord_id,  guild.commands[commandIndex].discord_id)
+        const client = new DiscordAPIClient(`Bot ${botToken}`)
+        await client.deleteGuildCommand(guild.discord_id, guild.commands[commandIndex].discord_id)
 
+        // eslint-disable-next-line no-magic-numbers
         guild.commands.splice(commandIndex, 1)
         guild.save()
     }

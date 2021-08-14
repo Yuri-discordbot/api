@@ -1,8 +1,9 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
-import {commandSchema} from "./command.js";
+import {commandSchema} from "./command.js"
 
-const schema = new mongoose.Schema({
+const schema = new mongoose.Schema(
+    {
         discord_id: {
             type: String,
             required: true,
@@ -15,8 +16,8 @@ const schema = new mongoose.Schema({
             createdAt: "created_at",
             updatedAt: "updated_at"
         }
-    });
+    })
 
-const Guild = mongoose.model("Guild", schema);
+const Guild = mongoose.model("Guild", schema)
 
-export {Guild};
+export {Guild}

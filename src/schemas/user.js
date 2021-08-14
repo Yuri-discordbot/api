@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
 
-const schema = new mongoose.Schema({
+const schema = new mongoose.Schema(
+    {
         discord_id: {
             type: String,
             required: true,
@@ -20,8 +21,8 @@ const schema = new mongoose.Schema({
             createdAt: "created_at",
             updatedAt: "updated_at"
         }
-    });
+    })
 
-const User = mongoose.model("User", schema);
+const User = mongoose.model("User", schema)
 
-export {User};
+export {User}
