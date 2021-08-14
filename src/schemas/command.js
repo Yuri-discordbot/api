@@ -22,6 +22,10 @@ const commandSchema = new mongoose.Schema({
             type: Boolean,
             required: true,
         },
+        discord_id: {
+            type: String,
+            required: true
+        }
     },
     {
         timestamps: {

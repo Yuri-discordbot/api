@@ -22,7 +22,7 @@ class DiscordAPIClient {
             const response = await this.client.get("/users/@me");
             return response.data;
         } catch (err) {
-            // something went wrong
+            console.log(e)
             throw new Error("Failed to get user info from token. Do you have the 'identify' scope in your token?")
         }
     }
@@ -32,13 +32,14 @@ class DiscordAPIClient {
             const response = await this.client.get("/users/@me/guilds");
             return response.data;
         } catch (err) {
+            console.log(e)
             throw new Error("Failed to get the guilds for the user. Do you have the 'guilds' scope in your token?")
         }
     }
 
     async createGuildCommand(guildDiscordId, name, description) {
         try {
-            await this.client.post(`applications/${applicationId}/guilds/${guildDiscordId}/commands`, {
+            const response = await this.client.post(`applications/${applicationId}/guilds/${guildDiscordId}/commands`, {
                 type: 1, // CHAT INPUT
                 name,
                 description,
@@ -67,8 +68,21 @@ class DiscordAPIClient {
                     }
                 ]
             })
+
+            return response.data
         } catch (e) {
+            console.log(e)
             throw new Error("Failed to register guild command")
+        }
+    }
+
+    async deleteGuildCommand(guildDiscordId, commandDiscordId) {
+        try {
+            const response = await this.client.delete(`applications/${applicationId}/guilds/${guildDiscordId}/commands/${commandDiscordId}`)
+            return response.data
+        } catch (e) {
+            console.log(e)
+            throw new Error("Failed to delete guild command")
         }
     }
 }
