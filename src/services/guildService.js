@@ -5,6 +5,10 @@ const GuildService = {
         return Guild.find()
     },
 
+    findById: (id) => {
+        return Guild.findById(id);
+    },
+
     findByDiscordId: async (discordId) => {
         return Guild.findOne({"discord_id": discordId})
     },

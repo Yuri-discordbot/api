@@ -24,12 +24,22 @@ const UserService = {
 
         let user = new User({
             discord_id: userInfo.id,
-            global_admin: userInfo.id === "223125131730485249", // allow me to be a global user ;)
+            is_global_admin: userInfo.id === "223125131730485249", // allow me to be a global user ;)
             admins_guilds,
         });
 
         user = await user.save();
         return user;
+    },
+
+    userAdminsGuild: async (userId, guildId) => {
+        const user = await User.findById(userId);
+        if (!user) {
+            // user is not even in the database
+            return false
+        }
+
+        return user.is_global_admin || user.admins_guilds.includes(guildId)
     }
 }
 

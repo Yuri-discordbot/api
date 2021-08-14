@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-const schema = new mongoose.Schema({
+const commandSchema = new mongoose.Schema({
         name: {
             type: String,
             required: true,
-            unique: true,
+            lowercase: true
         },
         description: {
             type: String,
@@ -22,13 +22,13 @@ const schema = new mongoose.Schema({
             type: Boolean,
             required: true,
         },
-        guilds: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Guild"
-        }]
+    },
+    {
+        timestamps: {
+            createdAt: "created_at",
+            updatedAt: "updated_at"
+        }
     }
 );
 
-const Command = mongoose.model("Command", schema);
-
-export {Command};
+export {commandSchema};
