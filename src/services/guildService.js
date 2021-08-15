@@ -14,10 +14,14 @@ const GuildService = {
     },
 
     createGuild: async (discordId) => {
-        const guild = new Guild({"discord_id": discordId})
+        let guild = new Guild({"discord_id": discordId})
 
         try {
-            return await guild.save()
+            guild = await guild.save()
+
+
+
+            return guild
         } catch (e) {
             console.log(e)
             throw new Error("This guild is already registered")

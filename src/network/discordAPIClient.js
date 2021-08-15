@@ -1,9 +1,8 @@
 import axios from "axios"
 import {environment} from "../env.js"
+import {StatusCodes} from "http-status-codes"
 
 /*** TODO: ADD RATE LIMITING ***/
-
-const applicationId = environment.applicationId
 
 class DiscordAPIClient {
     constructor(token) {
@@ -39,7 +38,7 @@ class DiscordAPIClient {
 
     async createGuildCommand(guildDiscordId, name, description) {
         try {
-            const response = await this.client.post(`applications/${applicationId}/guilds/${guildDiscordId}/commands`, {
+            const response = await this.client.post(`applications/${environment.applicationId}/guilds/${guildDiscordId}/commands`, {
                 type: 1, // CHAT INPUT
                 name,
                 description,
@@ -78,11 +77,14 @@ class DiscordAPIClient {
 
     async deleteGuildCommand(guildDiscordId, commandDiscordId) {
         try {
-            const response = await this.client.delete(`applications/${applicationId}/guilds/${guildDiscordId}/commands/${commandDiscordId}`)
+            const response = await this.client.delete(`applications/${environment.applicationId}/guilds/${guildDiscordId}/commands/${commandDiscordId}`)
             return response.data
         } catch (e) {
-            console.log(e)
-            throw new Error("Failed to delete guild command")
+            if (e.response.status === StatusCodes.FORBIDDEN) {
+                throw new Error("Please add the bot to your server before creating commands")
+            } else {
+                throw new Error("Failed to delete guild command")
+            }
         }
     }
 }

@@ -3,8 +3,6 @@ import {Guild} from "../schemas/guild.js"
 import {DiscordAPIClient} from "../network/discordAPIClient.js"
 import {environment} from "../env.js"
 
-const botToken = environment.botToken
-
 const findCommandWithNameInGuild = (guild, commandName) => {
     return guild.commands.find(command => command.name === commandName.toLowerCase())
 }
@@ -38,7 +36,7 @@ const CommandService = {
             throw new Error(`The command ${name}' already exists in this guild`)
         }
 
-        const client = new DiscordAPIClient(`Bot ${botToken}`)
+        const client = new DiscordAPIClient(`Bot ${environment.botToken}`)
         const createdCommand = await client.createGuildCommand(guild.discord_id, name, description)
 
         guild.commands.push({
@@ -72,7 +70,7 @@ const CommandService = {
             throw new Error("The requested command does not exists")
         }
 
-        const client = new DiscordAPIClient(`Bot ${botToken}`)
+        const client = new DiscordAPIClient(`Bot ${environment.botToken}`)
         await client.deleteGuildCommand(guild.discord_id, guild.commands[commandIndex].discord_id)
 
         // eslint-disable-next-line no-magic-numbers

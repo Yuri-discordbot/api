@@ -9,6 +9,7 @@ const startServer = async () => {
     await mongoose.connect(environment.mongoUrl, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
+        useFindAndModify: false,
         useCreateIndex: true,
     })
 

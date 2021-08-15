@@ -9,8 +9,8 @@ setInterval(() => {
 }, SECONDS_IN_ONE_DAY) // clear cache every day
 
 const checkTokenWithDiscordAndConvertToUser = async (token) => {
-    const discordApiService = new DiscordAPIClient(token)
-    const userInfo = await discordApiService.getUserInfo()
+    const client = new DiscordAPIClient(token)
+    const userInfo = await client.getUserInfo()
 
     if (!userInfo) {
         console.log("Could not retrieve user info from discord")
@@ -20,8 +20,7 @@ const checkTokenWithDiscordAndConvertToUser = async (token) => {
     let user = await UserService.getByDiscordId(userInfo.id)
 
     if (!user) {
-        const userGuilds = await discordApiService.getUserGuilds()
-        user = await UserService.createUserFromDiscordData(userInfo, userGuilds)
+        user = await UserService.createUserFromDiscordProfile(userInfo, token)
     }
 
     knownTokens[token] = user._id
