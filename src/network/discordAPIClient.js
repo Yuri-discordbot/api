@@ -40,13 +40,13 @@ class DiscordAPIClient {
         try {
             const response = await this.client.post(`applications/${environment.applicationId}/guilds/${guildDiscordId}/commands`, {
                 type: 1, // CHAT INPUT
-                name,
+                name: name.toLowerCase(),
                 description,
                 options: [
                     {
                         type: 9, // mentionable
                         name: "receiver",
-                        description: `Who do should receive '${name}'?`,
+                        description: `Who should receive '${name}'?`,
                         required: true
                     },
                     {
@@ -71,7 +71,11 @@ class DiscordAPIClient {
             return response.data
         } catch (e) {
             console.log(e)
-            throw new Error("Failed to register guild command")
+            if (e.response.status === StatusCodes.FORBIDDEN) {
+                throw new Error("Please add the bot to your server before deleting commands")
+            } else {
+                throw new Error("Failed to register guild command")
+            }
         }
     }
 
@@ -80,8 +84,9 @@ class DiscordAPIClient {
             const response = await this.client.delete(`applications/${environment.applicationId}/guilds/${guildDiscordId}/commands/${commandDiscordId}`)
             return response.data
         } catch (e) {
+            console.log(e)
             if (e.response.status === StatusCodes.FORBIDDEN) {
-                throw new Error("Please add the bot to your server before creating commands")
+                throw new Error("Please add the bot to your server before deleting commands")
             } else {
                 throw new Error("Failed to delete guild command")
             }
