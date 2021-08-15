@@ -5,7 +5,7 @@ import {schema} from "../../graphql/v1/index.js"
 
 const graphQlRoutes = Router()
 
-graphQlRoutes.use("/v1/graphql", graphqlHTTP(async (req) => ({
+graphQlRoutes.use("/graphql", graphqlHTTP(async (req) => ({
     schema,
     context: await buildContext(req),
     graphiql: false

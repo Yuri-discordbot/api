@@ -3,23 +3,37 @@ import {Guild} from "../schemas/guild.js"
 import {DiscordAPIClient} from "../network/discordAPIClient.js"
 import {environment} from "../env.js"
 
-const findCommandWithNameInGuild = (guild, commandName) => {
+const findCommandByNameInGuild = (guild, commandName) => {
     return guild.commands.find(command => command.name === commandName.toLowerCase())
+}
+
+const getGuildByIdAndThrowIfNotExists = async (guildId) => {
+    const guild = await Guild.findById(guildId)
+
+    if(! guild) {
+        throw new Error("The specified guild does not exists")
+    }
+
+    return guild
 }
 
 const CommandService = {
     findAllInGuild: async (guildId) => {
-        const guild = await Guild.findById(guildId)
-        if (!guild) return null
+        const guild = await getGuildByIdAndThrowIfNotExists(guildId)
 
         return guild.commands
     },
 
-    findInGuildByName: async (guildId, name) => {
-        const guild = await Guild.findById(guildId)
-        if (!guild) return null
+    findAllInGuildById: async (guildId, commandId) => {
+        const guild = await getGuildByIdAndThrowIfNotExists(guildId)
 
-        return findCommandWithNameInGuild(guild, name)
+        return guild.commands.find(command => String(command._id) === commandId)
+    },
+
+    findInGuildByName: async (guildId, name) => {
+        const guild = await getGuildByIdAndThrowIfNotExists(guildId)
+
+        return findCommandByNameInGuild(guild, name)
     },
 
     createCommandInGuild: async (currentUser, guildId, name, description, embed_text, images_urls, nsfw) => {
@@ -27,12 +41,9 @@ const CommandService = {
             throw new Error("You do not have the permissions to edit this guild")
         }
 
-        let guild = await Guild.findById(guildId)
-        if (!guild) {
-            throw new Error("The requested guild does not exists")
-        }
+        let guild = await getGuildByIdAndThrowIfNotExists(guildId)
 
-        if (findCommandWithNameInGuild(guild, name)) {
+        if (findCommandByNameInGuild(guild, name)) {
             throw new Error(`The command ${name}' already exists in this guild`)
         }
 
@@ -50,7 +61,7 @@ const CommandService = {
 
         guild = await guild.save()
 
-        return findCommandWithNameInGuild(guild, name)
+        return findCommandByNameInGuild(guild, name)
     },
 
     deleteCommandInGuild: async (currentUser, guildId, commandId) => {
@@ -58,10 +69,7 @@ const CommandService = {
             throw new Error("You do not have the permissions to edit this guild")
         }
 
-        const guild = await Guild.findById(guildId)
-        if (!guild) {
-            throw new Error("The requested guild does not exists")
-        }
+        const guild = await getGuildByIdAndThrowIfNotExists(guildId)
 
         const commandIndex = guild.commands.findIndex(command => String(command._id) === commandId)
 
