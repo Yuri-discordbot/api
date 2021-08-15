@@ -1,10 +1,9 @@
 import {Router} from "express"
-import {pingRoutes} from "./ping.js"
-import {graphQlRoutes} from "./graphql.js"
+import {v1} from "./v1/index.js"
 
 const routes = Router()
 
-routes.use(pingRoutes)
-routes.use(graphQlRoutes)
+// noinspection JSCheckFunctionSignatures
+routes.use("/v1", v1)
 
 export {routes}

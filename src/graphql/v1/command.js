@@ -1,5 +1,5 @@
 import gql from "graphql-tag"
-import {CommandService} from "../services/commandService.js"
+import {CommandService} from "../../services/commandService.js"
 
 const typeDef = gql`
     type Command {

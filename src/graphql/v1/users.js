@@ -1,5 +1,5 @@
 import gql from "graphql-tag"
-import {UserService} from "../services/userService.js"
+import {UserService} from "../../services/userService.js"
 
 const typeDef = gql`
     extend type Mutation {

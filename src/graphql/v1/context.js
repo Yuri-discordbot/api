@@ -1,4 +1,4 @@
-import {AuthenticationService} from "../services/authenticationService.js"
+import {AuthenticationService} from "../../services/authenticationService.js"
 
 const buildContext = async (req) => {
     let authToken = null

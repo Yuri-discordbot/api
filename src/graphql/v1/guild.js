@@ -1,5 +1,5 @@
 import gql from "graphql-tag"
-import {GuildService} from "../services/guildService.js"
+import {GuildService} from "../../services/guildService.js"
 
 const typeDef = gql`
     type Guild {
