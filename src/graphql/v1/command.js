@@ -12,6 +12,15 @@ const typeDef = gql`
         created_at: String!
         updated_at: String
     }
+    
+    input CreateCommandInput {
+        guildId: ID!,
+        name: String!,
+        description: String!,
+        embed_text: String,
+        images_url: [String],
+        nsfw: Boolean!
+    }
 
     extend type Query {
         commandsInGuild(guild_id: ID!): [Command]!,
@@ -20,7 +29,7 @@ const typeDef = gql`
     }
 
     extend type Mutation {
-        createCommand(guild_id: ID!, name: String!, description: String!, embed_text: String, images_urls: [String], nsfw: Boolean!): Command,
+        createCommand(input: CreateCommandInput!): Command,
         deleteCommand(guild_id: ID!, command_id: ID!): String
     }
 `
