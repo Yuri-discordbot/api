@@ -8,10 +8,12 @@ import {resolvers as userResolvers, typeDef as userTypeDef} from "./users.js"
 
 const query = gql`
     type Query {
+        "Disregerad this"
         _empty: String
     }
 
     type Mutation {
+        "Disregard this"
         _empty: String
     }
 `

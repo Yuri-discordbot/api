@@ -8,7 +8,7 @@ const graphQlRoutes = Router()
 graphQlRoutes.use("/graphql", graphqlHTTP(async (req) => ({
     schema,
     context: await buildContext(req),
-    graphiql: false
+    graphiql: true
 })))
 
 export {graphQlRoutes}
