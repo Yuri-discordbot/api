@@ -10,7 +10,7 @@ const findCommandByNameInGuild = (guild, commandName) => {
 const getGuildByIdAndThrowIfNotExists = async (guildId) => {
     const guild = await Guild.findById(guildId)
 
-    if(! guild) {
+    if (!guild) {
         throw new Error("The specified guild does not exists")
     }
 
@@ -62,6 +62,39 @@ const CommandService = {
         guild = await guild.save()
 
         return findCommandByNameInGuild(guild, name)
+    },
+
+    editCommandInGuild: async (currentUser, guildId, commandId, name, description, embed_text, images_urls, nsfw) => {
+        if (!await AuthorizationService.canUserEditGuild(currentUser, guildId)) {
+            throw new Error("You do not have the permissions to edit this guild")
+        }
+
+        const guild = await getGuildByIdAndThrowIfNotExists(guildId)
+
+        const commandIndex = guild.commands.findIndex(command => String(command._id) === commandId)
+
+        // eslint-disable-next-line no-magic-numbers
+        if (commandIndex === -1) {
+            throw new Error("The requested command does not exists")
+        }
+
+        if (name || description) {
+            const client = new DiscordAPIClient(`Bot ${environment.botToken}`)
+            await client.editGuildCommand(guild.discord_id, guild.commands[commandIndex].discord_id, {
+                name,
+                description
+            })
+        }
+
+        guild.commands[commandIndex].name = name || guild.commands[commandIndex].name
+        guild.commands[commandIndex].description = description || guild.commands[commandIndex].description
+        guild.commands[commandIndex].embed_text = embed_text || guild.commands[commandIndex].embed_text
+        guild.commands[commandIndex].images_urls = images_urls || guild.commands[commandIndex].images_urls
+        guild.commands[commandIndex].nsfw = nsfw || guild.commands[commandIndex].nsfw
+
+        guild.save()
+
+        return guild.commands[commandIndex]
     },
 
     deleteCommandInGuild: async (currentUser, guildId, commandId) => {

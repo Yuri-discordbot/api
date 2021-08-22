@@ -79,6 +79,20 @@ class DiscordAPIClient {
         }
     }
 
+    async editGuildCommand(guildDiscordId, commandDiscordId, patch) {
+        try {
+            const response = await this.client.patch(`applications/${environment.applicationId}/guilds/${guildDiscordId}/commands/${commandDiscordId}`, patch)
+            return response.data
+        } catch (e) {
+            console.warn(e)
+            if (e.response.status === StatusCodes.FORBIDDEN) {
+                throw new Error("Please add the bot to your server before editing commands")
+            } else {
+                throw new Error("Failed to delete guild command")
+            }
+        }
+    }
+
     async deleteGuildCommand(guildDiscordId, commandDiscordId) {
         try {
             const response = await this.client.delete(`applications/${environment.applicationId}/guilds/${guildDiscordId}/commands/${commandDiscordId}`)
