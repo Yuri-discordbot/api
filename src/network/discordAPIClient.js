@@ -4,6 +4,38 @@ import {StatusCodes} from "http-status-codes"
 
 /*** TODO: ADD RATE LIMITING ***/
 
+const discordifyCommand = (command) => {
+    return {
+        type: 1, // CHAT INPUT
+        name: command.name,
+        description: command.description,
+        options: [
+            {
+                type: 9, // mentionable
+                name: "receiver",
+                description: `Who should receive \`${command.name}\`?`,
+                required: true
+            },
+            {
+                type: 3, // string
+                name: "options",
+                description: `Offer or ask \`${command.name}\``,
+                required: false,
+                choices: [
+                    {
+                        name: "offer",
+                        value: "offer",
+                    },
+                    {
+                        name: "ask",
+                        value: "ask",
+                    }
+                ]
+            }
+        ]
+    }
+}
+
 class DiscordAPIClient {
     constructor(token) {
         this.client = axios.create({
@@ -38,35 +70,10 @@ class DiscordAPIClient {
 
     async createGuildCommand(guildDiscordId, name, description) {
         try {
-            const response = await this.client.post(`applications/${environment.applicationId}/guilds/${guildDiscordId}/commands`, {
-                type: 1, // CHAT INPUT
-                name: name.toLowerCase(),
-                description,
-                options: [
-                    {
-                        type: 9, // mentionable
-                        name: "receiver",
-                        description: `Who should receive '${name}'?`,
-                        required: true
-                    },
-                    {
-                        type: 3, // string
-                        name: "options",
-                        description: `Offer or ask ${name}`,
-                        required: false,
-                        choices: [
-                            {
-                                name: "offer",
-                                value: "offer"
-                            },
-                            {
-                                name: "ask",
-                                value: "ask"
-                            },
-                        ]
-                    }
-                ]
-            })
+            const response = await this.client.post(`applications/${environment.applicationId}/guilds/${guildDiscordId}/commands`, discordifyCommand({
+                name,
+                description
+            }))
 
             return response.data
         } catch (e) {
@@ -103,6 +110,24 @@ class DiscordAPIClient {
                 throw new Error("Please add the bot to your server before deleting commands")
             } else {
                 throw new Error("Failed to delete guild command")
+            }
+        }
+    }
+
+    async batchEditGuildCommands(guildDiscordId, commands) {
+
+        const discordCommands = commands.map(command => discordifyCommand(command))
+
+        try {
+            const response = await this.client.put(`/applications/${environment.applicationId}/guilds/${guildDiscordId}/commands`,
+                discordCommands)
+            return response.data
+        } catch (e) {
+            console.log(e)
+            if (e.response.status === StatusCodes.FORBIDDEN) {
+                throw new Error("Please add the bot to your server before deleting commands")
+            } else {
+                throw new Error("Failed to edit guild commands")
             }
         }
     }

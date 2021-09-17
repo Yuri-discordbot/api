@@ -2,6 +2,7 @@ import {AuthorizationService} from "./authorizationService.js"
 import {Guild} from "../schemas/guild.js"
 import {DiscordAPIClient} from "../network/discordAPIClient.js"
 import {environment} from "../env.js"
+import {legacyCommands} from "../legacyCommands.js"
 
 const findCommandByNameInGuild = (guild, commandName) => {
     return guild.commands.find(command => command.name === commandName.toLowerCase())
@@ -117,6 +118,38 @@ const CommandService = {
         // eslint-disable-next-line no-magic-numbers
         guild.commands.splice(commandIndex, 1)
         guild.save()
+    },
+
+    addLegacyCommands: async (currentUser, guildId) => {
+        if (!await AuthorizationService.canUserEditGuild(currentUser, guildId)) {
+            throw new Error("You do not have the permissions to edit this guild")
+        }
+
+        const guild = await getGuildByIdAndThrowIfNotExists(guildId)
+
+        // merge the legacy commands with the existing ones in case there is one that has
+        for (const legacyCommand of legacyCommands) {
+            let found = false
+            for (const guildCommand of guild.commands) {
+                if (legacyCommand.name === guildCommand.name) {
+                    found = true
+                }
+            }
+
+            if (!found) {
+                guild.commands.push(legacyCommand)
+            }
+        }
+
+        const client = new DiscordAPIClient(`Bot ${environment.botToken}`)
+        const newCommands = await client.batchEditGuildCommands(guild.discord_id, guild.commands)
+
+        for (let i = 0; i < guild.commands.length; i++) {
+            guild.commands[i].discord_id = newCommands[i].id
+        }
+
+        guild.save()
+        return guild.commands
     }
 }
 

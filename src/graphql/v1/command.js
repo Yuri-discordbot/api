@@ -64,6 +64,8 @@ const typeDef = gql`
         editCommand(input: EditCommandInput): Command
         "Delete a command in a guild"
         deleteCommand(guild_id: ID!, command_id: ID!): String
+        "Creates all of the legacy Yuri 2.0 commands in the specified server"
+        addLegacyCommands(guild_id: ID!): [Command]
     }
 `
 
@@ -90,6 +92,9 @@ const resolvers = {
         deleteCommand: async (_root, args, context) => {
             await CommandService.deleteCommandInGuild(context.currentUser, args.guild_id, args.command_id)
             return "Ok"
+        },
+        addLegacyCommands: async (_root, args, context) => {
+            return CommandService.addLegacyCommands(context.currentUser, args.guild_id)
         }
     },
 }
